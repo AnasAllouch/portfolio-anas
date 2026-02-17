@@ -5,6 +5,15 @@ export async function POST(req: Request) {
     try {
         const { name, email, message } = await req.json();
 
+        // Validate environment variables
+        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            console.error('Missing environment variables: EMAIL_USER or EMAIL_PASS');
+            return NextResponse.json(
+                { error: 'Server configuration error' },
+                { status: 500 }
+            );
+        }
+
         if (!name || !email || !message) {
             return NextResponse.json(
                 { error: 'Missing required fields' },
@@ -22,7 +31,7 @@ export async function POST(req: Request) {
 
         const mailOptions = {
             from: `Portfolio Contact <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER, // Send to yourself
+            to: process.env.EMAIL_USER,
             replyTo: email,
             subject: `New Message from Portfolio: ${name}`,
             text: `
@@ -42,11 +51,21 @@ export async function POST(req: Request) {
         `,
         };
 
+        try {
+            await transporter.verify();
+        } catch (error) {
+            console.error('Transporter verification failed:', error);
+            return NextResponse.json(
+                { error: 'Email service unavailable' },
+                { status: 500 }
+            );
+        }
+
         await transporter.sendMail(mailOptions);
 
         return NextResponse.json({ success: true, message: 'Email sent successfully' });
     } catch (error) {
-        console.error('Error sending email:', error);
+        console.error('Error in send-email route:', error);
         return NextResponse.json(
             { error: 'Failed to send email' },
             { status: 500 }
