@@ -28,7 +28,7 @@ export function About() {
                     <div className="grid md:grid-cols-2 gap-12 items-center">
                         <div className="space-y-6 text-lg text-slate-600 font-roboto leading-relaxed">
                             <p>
-                                I am a <span className="font-bold text-google-dark">22-year-old AI & Cybersecurity Engineer</span> based in Rabat, Morocco.
+                                I am a <span className="font-bold text-google-dark">23-year-old AI & Cybersecurity Engineer</span> based in Rabat, Morocco.
                                 Currently pursuing my Master’s degree at Université Ibn Tofail.
                             </p>
                             <p>
